@@ -23,9 +23,10 @@ Por ejemplo, este directorio podría contener lo siguiente:
 ./moodle33/moodle-latest-33.tgz
 ./moodle33/es.zip
 
+./plugins/report_coursesize_moodle30_2011081300.zip
 ./plugins/report_coursesize_moodle31_2016051600.zip
 ./plugins/format_onetopic_moodle27_2014092802.zip
-./plugins/report_coursesize_moodle30_2011081300.zip
+./plugins/format_onetopic_moodle30_2016020501.zip
 ./plugins/format_onetopic_moodle32_2016071402.zip
 ~~~
 
