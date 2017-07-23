@@ -4,7 +4,7 @@
 
 # Apache
 server_name: "webserver"
-server_admin: "admin@iesluisvelez.org"
+server_admin: "admin@example.com"
 document_root: "/var/www/"
 
 

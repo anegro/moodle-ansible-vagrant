@@ -105,7 +105,7 @@ Editar el archivo `vars/main.yml` y especificar los parámetros para una instala
 
 # Apache
 server_name: "webserver"
-server_admin: "admin@iesluisvelez.org"
+server_admin: "admin@example.com"
 document_root: "/var/www/"
 
 
