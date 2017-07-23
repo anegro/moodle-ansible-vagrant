@@ -65,9 +65,6 @@ También podemos utilizar un *script* (una vez desplegado el escenario con Vagra
 ./utils/generate-hosts.sh
 ~~~
 
-!!! Nota
-	Puede que primero necesitemos dar permiso de ejecución a los *scripts*. Para ello podemos hacer lo siguiente: `chmod a+x *.sh`.
-
 
 ### 4) Cargar las claves criptográficas para acceder por SSH
 
@@ -93,9 +90,6 @@ Editaremos el archivo `site.yml` donde escribiremos un *playbook* de **Ansible**
 ~~~
 ansible-playbook site.yml
 ~~~
-
-!!! Advertencia
-	Ninguno de los directorios en la ruta hasta llegar al *playbook* puede contener espacios en blanco ni caracteres extraños.
 
 
 ## Uso avanzado
