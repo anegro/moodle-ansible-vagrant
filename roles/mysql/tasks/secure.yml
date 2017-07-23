@@ -1,0 +1,23 @@
+---
+- name: Crear contraseña segura de root para MySQL
+  command: /usr/bin/openssl rand -base64 16
+  register: random_passwd
+  when: mysql_root_passwd is not defined
+ 
+- name: Utilizar contraseña personalizada de root para MySQL
+  set_fact: mysql_root_passwd={{ random_passwd.stdout }}
+  when: mysql_root_passwd is not defined
+
+- name: Actualizar contraseña de root de MySQL
+  mysql_user: name=root host={{ item }} password={{ mysql_root_passwd }}
+  with_items: "{{ mysql_root_hosts }}"
+ 
+- name: Copiar el archivo my.cnf de usuario con las credenciales de root passwd
+  template: src=root/my.cnf.j2 dest=~/.my.cnf owner=vagrant group=vagrant mode=0600
+
+- name: Borrar usuario anónimo de MySQL
+  mysql_user: name="" state=absent
+ 
+- name: Borrar la BD test de MySQL
+  mysql_db: name=test state=absent
+

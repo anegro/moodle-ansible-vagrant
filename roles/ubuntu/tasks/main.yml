@@ -1,0 +1,8 @@
+---
+# Preparativos básicos para Ubuntu Server
+- name: Cambiar a repositorios globales
+  replace: dest=/etc/apt/sources.list
+    regexp='//.*\.archive\.ubuntu\.com'
+    replace='//archive.ubuntu.com'
+    backup=yes
+

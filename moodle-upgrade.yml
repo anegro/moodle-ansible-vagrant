@@ -1,0 +1,109 @@
+---
+# Operaciones sobre todos los nodos
+- hosts: all
+
+  gather_facts: true
+  remote_user: vagrant
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  # Desactivar ejecución en paralelo para evitar problemas con Vagrant-Cachier
+  serial: 1
+
+  vars:
+    equipo: "{{ inventory_hostname }}"
+
+  vars_files:
+    - vars/main.yml
+
+  pre_tasks:
+    - name: Instalar unzip
+      apt: pkg=unzip state=installed
+
+  
+  tasks:
+    # Copia de seguridad previa
+    - name: Activar el modo de mantenimiento
+      command: php admin/cli/maintenance.php --enable
+      args:
+        chdir: "{{ moodle_dir }}"
+
+    - name: Hacer copia de seguridad de config.php
+      command: cp {{ moodle_dir }}/config.php /tmp/
+
+
+    # Instalar archivos de aplicación
+    - name: Borrar antiguo directorio de Moodle
+      file: path={{ moodle_dir }} state=absent
+
+    - name: Descomprimir archivos de la aplicación web
+      unarchive: src=files/{{ moodle_tarball }}
+        dest={{ document_root }}
+        owner={{ moodle_dir_owner }} group={{ moodle_dir_group }} mode={{ moodle_dir_permissions_dirs }}
+
+    - name: Configurar permisos de la aplicación web
+      command: find {{ moodle_dir }} -type f -exec chmod {{ moodle_dir_permissions_files }} {} \;
+
+
+    # Instalar idoma
+    - name: Comprobar directorio de idioma español
+      stat: path={{ moodle_dir }}/lang/{{ moodle_langdir }}
+      register: directorio
+
+    - name: Descomprimir paquete de idioma español
+      unarchive: src=files/{{ moodle_langpack }}
+        dest={{ moodle_dir }}/lang
+        owner={{ moodle_dir_owner }} group={{ moodle_dir_group }} mode={{ moodle_dir_permissions_dirs }}
+      when: not directorio.stat.exists
+
+    - name: Configurar permisos del paquete de idioma
+      command: find {{ moodle_dir }}/lang -type f -exec chmod {{ moodle_dir_permissions_files }} {} \;
+      when: not directorio.stat.exists
+
+
+    # Instalar plugins
+    - name: Descomprimir plugins
+      unarchive: src=files/{{ item.package }}
+        dest={{ moodle_dir }}/{{ item.type }}
+        owner={{ moodle_dir_owner }} group={{ moodle_dir_group }} mode={{ moodle_dir_permissions_dirs }}
+      with_items: "{{ moodle_install_plugins }}"
+      when: moodle_install_plugins is defined
+
+    - name: Configurar permisos de los plugins
+      command: find {{ moodle_dir }}/{{ item.type }}/{{ item.directory }} -type f -exec chmod {{ moodle_dir_permissions_files }} {} \;
+      with_items: "{{ moodle_install_plugins }}"
+      when: moodle_install_plugins is defined
+
+
+    # Aplicar parches
+    - name: Aplicar parches
+      copy: src=files/{{ item.source }}
+        dest={{ moodle_dir }}/{{ item.target }}
+        owner={{ moodle_dir_owner }} group={{ moodle_dir_group }} mode={{ moodle_dir_permissions_files }}
+      with_items: "{{ moodle_install_patches }}"
+      when: moodle_install_patches is defined
+
+
+    # Comenzar actualización desatendida
+    - name: Restaurar config.php original
+      command: cp /tmp/config.php {{ moodle_dir }}/
+
+    - name: Actualizar Moodle
+      command: php admin/cli/upgrade.php --non-interactive --allow-unstable
+      args:
+        chdir: "{{ moodle_dir }}"
+
+    - name: Corregir permisos de config.php
+      file: path={{ moodle_dir }}/config.php
+        owner={{ moodle_dir_owner }} group={{ moodle_dir_group }} mode={{ moodle_dir_permissions_files }}
+
+    - name: Desactivar el modo de mantenimiento
+      command: php admin/cli/maintenance.php --disable
+      args:
+        chdir: "{{ moodle_dir }}"
+
+
+  handlers:
+    - include: handlers/main.yml
+

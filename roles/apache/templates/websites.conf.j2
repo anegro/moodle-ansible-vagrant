@@ -1,0 +1,40 @@
+{% for site in apache_sites %}
+<VirtualHost {{ apache_listen_ip }}:{{ apache_listen_port }}>
+	ServerName {{ site.server_name }}
+{% if site.server_admin is defined %}
+	ServerAdmin {{ site.server_admin }}
+{% endif %}
+
+	DocumentRoot {{ site.document_root }}
+
+	<Directory {{ site.document_root }} >
+		Options Indexes FollowSymLinks
+		AllowOverride None
+		Require all granted
+	</Directory>
+</VirtualHost>
+{% endfor %}
+
+{% for site in apache_sites_ssl %}
+<VirtualHost {{ apache_listen_ip }}:{{ apache_listen_port_ssl }}>
+	ServerName {{ site.server_name }}
+{% if site.server_admin is defined %}
+	ServerAdmin {{ site.server_admin }}
+{% endif %}
+
+	DocumentRoot {{ site.document_root }}
+
+	SSLEngine on
+	SSLCertificateFile /etc/ssl/private/{{ site.certificate_name }}.pem
+
+	<Directory {{ site.document_root }} >
+		SSLRequireSSL
+
+		Options Indexes FollowSymLinks
+		AllowOverride None
+		Require all granted
+	</Directory>
+</VirtualHost>
+{% endfor %}
+
+

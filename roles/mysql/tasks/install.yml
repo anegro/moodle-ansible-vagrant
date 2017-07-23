@@ -1,0 +1,13 @@
+---
+# MySQL modules
+- name: Instalar MySQL
+  apt: name={{ item }} state=installed update_cache=yes
+  with_items:
+    - mysql-server
+    - python-mysqldb
+  notify: start mysql
+
+- name: Configurar ajustes de MySQL
+  template: src=etc/mysqld.cnf.j2 dest=/etc/mysql/mysql.conf.d/mysqld.cnf owner=vagrant group=vagrant mode=0600
+  notify: restart mysql
+

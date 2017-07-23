@@ -1,0 +1,38 @@
+---
+apache_packages:
+  - apache2
+  - apache2-utils
+  - libapache2-mod-php
+
+apache_listen_ip: "*"
+apache_listen_port: 80
+apache_listen_port_ssl: 443
+
+apache_mods_enabled: []
+#apache_mods_enabled:
+#  - ssl
+#  - rewrite
+#  - alias
+
+apache_mods_disabled:
+  - status
+
+apache_create_sites: true
+apache_sites_filename: "websites.conf"
+apache_remove_default_site: true
+
+apache_sites:
+  - server_name: "{{ inventory_hostname }}"
+    server_admin: "admin@example.com"
+    document_root: "/var/www/"
+
+
+apache_sites_ssl: []
+#apache_sites_ssl:
+#  - server_name: "{{ inventory_hostname }}"
+#    server_admin: "admin@example.com"
+#    document_root: "/var/www/"
+#    # /etc/ssl/private/{{ certificate_name }}.pem
+#    certificate_name: "{{ inventory_hostname }}"
+#    auto_generate: yes
+

@@ -1,0 +1,37 @@
+---
+php_packages:
+  - php
+  - php-cli
+
+php_modules:
+  - php-intl
+  - php-zip
+  - php-gd
+  - php-curl
+  - php-xml
+  - php-xmlrpc
+  - php-mbstring
+  - php-soap
+  - php-mysql
+
+php_ini_file: "/etc/php/7.0/apache2/php.ini"
+
+php_settings:
+  - param: display_errors
+    value: "Off"
+
+  - param: upload_max_filesize
+    value: "1024M"
+
+  - param: post_max_size
+    value: "1025M"
+
+  - param: max_execution_time
+    value: 3600
+
+  - param: max_input_time
+    value: 3600
+
+  - param: memory_limit
+    value: "128M"
+

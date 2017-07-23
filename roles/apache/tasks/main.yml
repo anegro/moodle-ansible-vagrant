@@ -1,0 +1,85 @@
+---
+# Instalación de apache
+- name: Instalar apache
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items: "{{ apache_packages }}"
+  notify: start apache
+
+
+# Configuración de apache
+- name: Configurar FQDN por defecto
+  template: src=fqdn.conf.j2
+    dest=/etc/apache2/conf-available/fqdn.conf
+    owner=root group=root mode=0644
+  notify: restart apache
+
+- name: Habilitar configuración FQDN
+  command: a2enconf fqdn.conf
+  notify: restart apache
+
+- name: Configurar puertos de escucha
+  lineinfile: dest=/etc/apache2/ports.conf
+    regexp="^Listen"
+    line="Listen {{ apache_listen_port }}"
+    state=present
+  notify: restart apache
+
+
+# Configurar módulos de apache
+- name: Habilitar módulos de apache
+  command: a2enmod {{ item }}
+  with_items: "{{ apache_mods_enabled }}"
+  when: apache_mods_enabled is defined
+  notify: restart apache
+
+- name: Deshabilitar módulos de apache
+  command: a2dismod {{ item }}
+  with_items: "{{ apache_mods_disabled }}"
+  when: apache_mods_disabled is defined
+  notify: restart apache
+
+
+# Generar certificados autofirmados
+- name: Crear certificado autofirmado
+  command: >
+    {% if item.auto_generate %}
+    openssl req -new -x509 -nodes -days 365
+    -subj "/C=ES/ST=Madrid/L=Madrid/O=Company/CN={{ item.server_name }}"
+    -key /etc/ssl/private/ssl-cert-snakeoil.key
+    -out /etc/ssl/private/{{ item.certificate_name }}.crt
+    {% else %}
+    true
+    {% endif %}
+  with_items: "{{ apache_sites_ssl }}"
+  when: apache_create_sites
+
+- name: Crear archivo PEM
+  shell: >
+    {% if item.auto_generate %}
+    cat /etc/ssl/private/ssl-cert-snakeoil.key /etc/ssl/private/{{ item.certificate_name }}.crt > /etc/ssl/private/{{ item.certificate_name }}.pem
+    {% else %}
+    true
+    {% endif %}
+  with_items: "{{ apache_sites_ssl }}"
+  when: apache_create_sites
+
+
+# Configuración de sitios web
+- name: Crear archivo de configuración de sitios web
+  template:
+    src=websites.conf.j2
+    dest=/etc/apache2/sites-available/{{ apache_sites_filename }}
+    owner=root group=root mode=0644
+  notify: restart apache
+  when: apache_create_sites
+
+- name: Habilitar sitios web definidos
+  command: a2ensite {{ apache_sites_filename }}
+  notify: restart apache
+  when: apache_create_sites
+
+- name: Deshabilitar el sitio web por defecto
+  command: a2dissite 000-default
+  notify: restart apache
+  when: apache_remove_default_site
+

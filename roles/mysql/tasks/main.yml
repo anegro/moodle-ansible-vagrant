@@ -1,0 +1,11 @@
+---
+# Instalación y ajustes de seguridad de MySQL
+- include: install.yml
+
+- name: Comprobar credenciales de MySQL
+  stat: path=~/.my.cnf
+  register: my_cnf
+
+- include: secure.yml
+  when: not my_cnf.stat.exists
+

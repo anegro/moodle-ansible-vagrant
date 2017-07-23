@@ -1,0 +1,158 @@
+---
+# Operaciones sobre todos los nodos
+- hosts: all
+
+  gather_facts: true
+  remote_user: vagrant
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  # Desactivar ejecución en paralelo para evitar problemas con Vagrant-Cachier
+  serial: 1
+
+  vars:
+    equipo: "{{ inventory_hostname }}"
+
+  vars_files:
+    - vars/main.yml
+
+  pre_tasks:
+    - name: Instalar unzip
+      apt: pkg=unzip state=installed
+
+  
+  tasks:
+    # Instalar archivos de aplicación
+    - name: Comprobar directorio de Moodle
+      stat: path={{ moodle_dir }}
+      register: directorio
+
+    - name: Descomprimir archivos de la aplicación web
+      unarchive: src=files/{{ moodle_tarball }}
+        dest={{ document_root }}
+        owner={{ moodle_dir_owner }} group={{ moodle_dir_group }} mode={{ moodle_dir_permissions_dirs }}
+      when: not directorio.stat.exists
+
+    - name: Configurar permisos de la aplicación web
+      command: find {{ moodle_dir }} -type f -exec chmod {{ moodle_dir_permissions_files }} {} \;
+      when: not directorio.stat.exists
+
+
+    # Instalar idoma
+    - name: Comprobar directorio de idioma español
+      stat: path={{ moodle_dir }}/lang/{{ moodle_langdir }}
+      register: directorio
+
+    - name: Descomprimir paquete de idioma español
+      unarchive: src=files/{{ moodle_langpack }}
+        dest={{ moodle_dir }}/lang
+        owner={{ moodle_dir_owner }} group={{ moodle_dir_group }} mode={{ moodle_dir_permissions_dirs }}
+      when: not directorio.stat.exists
+
+    - name: Configurar permisos del paquete de idioma
+      command: find {{ moodle_dir }}/lang -type f -exec chmod {{ moodle_dir_permissions_files }} {} \;
+      when: not directorio.stat.exists
+
+
+    # Instalar plugins
+    - name: Descomprimir plugins
+      unarchive: src=files/{{ item.package }}
+        dest={{ moodle_dir }}/{{ item.type }}
+        owner={{ moodle_dir_owner }} group={{ moodle_dir_group }} mode={{ moodle_dir_permissions_dirs }}
+      with_items: "{{ moodle_install_plugins }}"
+      when: moodle_install_plugins is defined
+
+    - name: Configurar permisos de los plugins
+      command: find {{ moodle_dir }}/{{ item.type }}/{{ item.directory }} -type f -exec chmod {{ moodle_dir_permissions_files }} {} \;
+      with_items: "{{ moodle_install_plugins }}"
+      when: moodle_install_plugins is defined
+
+
+    # Aplicar parches
+    - name: Aplicar parches
+      copy: src=files/{{ item.source }}
+        dest={{ moodle_dir }}/{{ item.target }}
+        owner={{ moodle_dir_owner }} group={{ moodle_dir_group }} mode={{ moodle_dir_permissions_files }}
+      with_items: "{{ moodle_install_patches }}"
+      when: moodle_install_patches is defined
+
+
+    # Preparar directorio moodledata
+    - name: Comprobar directorio moodledata
+      stat: path={{ moodle_data }}
+      register: directorio
+
+    - name: Crear directorio de datos
+      file: path={{ moodle_data }}
+        state=directory recurse=yes
+        owner={{ moodle_data_owner }} group={{ moodle_data_group }} mode={{ moodle_data_permissions_dirs }}
+      when: not directorio.stat.exists
+
+
+    # Preparar Base de Datos
+    - name: Crear Base de Datos
+      mysql_db: name={{ db_name }} state=present
+
+    - name: Crear usuario y otorgarle privilegios sobre la BD
+      mysql_user: name={{ db_user }} password={{ db_pass }} priv={{ db_name }}.*:ALL state=present
+
+
+    # Crear archivo config.php (e instalar Moodle, en su caso)
+    - name: Instalar Moodle
+      command: >
+        php admin/cli/install.php
+        --lang=es
+        --wwwroot='{{ moodle_wwwroot }}'
+        --dataroot='{{ moodle_data }}'
+        --dbname='{{ db_name }}'
+        --dbuser='{{ db_user }}'
+        --dbpass='{{ db_pass }}'
+        --adminuser='{{ moodle_admin }}'
+        --adminpass='{{ moodle_password }}'
+        --fullname='{{ moodle_sitefullname }}'
+        --shortname='{{ moodle_siteshortname }}'
+        --non-interactive
+        --allow-unstable
+        --agree-license
+        {% if moodle_version > 2.8 %}
+          --adminemail='{{ moodle_email }}'
+          --summary='{{ moodle_sitesummary }}'
+        {% endif %}
+        {% if not db_create_tables and moodle_version > 2.9 %}
+          --skip-database
+        {% endif %}
+      args:
+        chdir: "{{ moodle_dir }}"
+        creates: config.php
+
+    - name: Corregir permisos de config.php
+      file: path={{ moodle_dir }}/config.php
+        owner={{ moodle_dir_owner }} group={{ moodle_dir_group }} mode={{ moodle_dir_permissions_files }}
+    
+    - name: Personalizar archivo config.php
+      lineinfile:
+        dest: "{{ moodle_dir }}/config.php"
+        line: "$CFG->{{ item.name }} = '{{ item.value }}';"
+        insertbefore: "^require_once"
+      with_items: "{{ moodle_config_php_options }}"
+
+
+#    - name: Crear archivo config.php a partir de plantilla
+#      template: src=moodle/config.php.j2
+#        dest={{ moodle_dir }}/config.php
+#        owner={{ moodle_dir_owner }} group={{ moodle_dir_group }} mode={{ moodle_dir_permissions_files }}
+
+#    - name: Cambiar contraseña de Administrador
+#      command: >
+#        /usr/bin/php admin/cli/reset_password.php
+#        --username={{ moodle_admin }}
+#        --password={{ moodle_password }}
+#        --ignore-password-policy
+#      args:
+#        chdir: "{{ moodle_dir }}"
+
+
+  handlers:
+    - include: handlers/main.yml
+

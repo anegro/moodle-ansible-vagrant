@@ -1,0 +1,37 @@
+---
+# Operaciones sobre todos los nodos
+- hosts: all
+
+  gather_facts: true
+  remote_user: vagrant
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  # Desactivar ejecución en paralelo para evitar problemas con Vagrant-Cachier
+  serial: 1
+
+  vars:
+    equipo: "{{ inventory_hostname }}"
+
+  vars_files:
+    - vars/main.yml
+
+
+  tasks:
+    - name: Hacer copia de seguridad de la Base de Datos
+      mysql_db: state=dump
+        name={{ db_name }}
+        target={{ backup_dir }}/{{ db_name }}.sql
+
+    - name: Hacer copia de seguridad de moodledata
+      archive: path={{ moodle_data }}
+        dest={{ backup_dir }}/moodledata.tar.gz
+
+    - name: Hacer copia de seguridad de config.php
+      command: cp {{ moodle_dir }}/config.php {{ backup_dir }}
+
+
+  handlers:
+    - include: handlers/main.yml
+

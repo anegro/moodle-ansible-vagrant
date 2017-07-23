@@ -1,0 +1,14 @@
+---
+
+# Operaciones comunes sobre todos los nodos
+- include: common.yml
+
+# Instalación de Apacha/PHP/MySQL
+- include: lamp.yml
+
+# Desplegar archivos de aplicación y preparar base de datos
+- include: moodle-install.yml
+
+# Restaurar copia de seguridad
+#- include: moodle-restore.yml
+
