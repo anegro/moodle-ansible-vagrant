@@ -104,7 +104,7 @@ ansible-playbook site.yml
 
 Editar el archivo `vars/main.yml` y especificar los parámetros para una instalación personalizada:
 
-~~~
+~~~.yml
 ---
 # Configuración global de los playbooks
 
@@ -228,7 +228,56 @@ En caso de que el servidor ya tenga instalado el software de base, podemos pasar
 ansible-playbook moodle-install.yml
 ~~~
 
-### 
+### Realizar copia de seguridad
+
+Es posible realizar una copia de seguridad de una instalación de Moodle. Para ello podemos utilizar el *playbook* `moodle-backup.yml` que realizará lo siguiente:
+
+- Crear un volcado de la base de datos de Moodle: `moodle_db.sql`.
+- Crear una copia de seguridad de `moodledata`: `moodledata.tar.gz`.
+- Guardar una copia del archivo `config.php` con todos los ajustes que contenga.
+
+Por defecto, estos archivos son copiados en el directorio `/vagrant/files/backups` de la máquina virtual, con lo cual deberían aparecer en el directorio `files/backups` del anfitrión.
+
+### Restaurar copia de seguridad
+
+Para restaurar una copia de seguridad de una instalación de Moodle podemos utilizar el *playbook* `moodle-restore.yml` que realizará lo siguiente:
+
+- Importa un volcado de la base de datos de Moodle: `moodle_db.sql`.
+- Restaura el directorio `moodledata` a partir de una copia: `moodledata.tar.gz`.
+- Restaura el archivo `config.php` con todos los ajustes.
+
+Por defecto, la ubicación de los archivos de la copia de seguridad debe ser `files/backups` (en el anfitrión).
+
+### Actualizar Moodle
+
+Para actualizar una instalación de Moodle a una versión más moderna podemos utilizar el *playbook* `moodle-upgrade.yml`. El proceso de actualización se asemeja al de instalación, pero no se creará la base de datos ni el directorio `moodledata`. Concretamente, se realizará lo siguiente:
+
+- Crear una copia de seguridad de `config.php`.
+- Activar el **modo mantenimiento** de la aplicación.
+- Eliminar los archivos de la versión antigua de la aplicación.
+- Descomprimir los archivos de nueva versión.
+- Descomprimir paquetes de idoma (opcional).
+- Descomprimir plugins (opcional).
+- Aplicar parches (opcional).
+- Ajustar los permisos del directorio de la aplicación web.
+- Restaurar el archivo de configuración `config.php` con los ajustes originales.
+- Ejecutar el script de actualización de Moodle en modo desatendido.
+- Desactivar el **modo mantenimiento** de la aplicación.
+
+### Activar mensajes de error de PHP
+
+En ocasiones nos puede interesar activar o desactivar los mensajes de error de PHP. Para ello podemos utilizar el *playbook* `debug-php.yml`:
+
+~~~
+# Mostrar errores de PHP
+ansible-playbook debug-php.yml --tags enable
+
+# Ocultar errores de PHP
+ansible-playbook debug-php.yml --tags disable
+~~~
+
+moodle-restore.yml
+moodle-upgrade.yml
 
 ## Referencias
 

@@ -1,32 +1,11 @@
-# Prerequisites
-*.d
+# Ansible
+*.retry
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# Vagrant
+.vagrant/
 
-# Precompiled Headers
-*.gch
-*.pch
+# Otros
+test.yml
+recursos/*
+vars/secrets.yml
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
