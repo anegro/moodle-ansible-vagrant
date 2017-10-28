@@ -3,7 +3,7 @@
 # Operaciones comunes sobre todos los nodos
 - include: common.yml
 
-# Instalación de Apacha/PHP/MySQL
+# Instalación de Apache/PHP/MySQL
 - include: lamp.yml
 
 # Desplegar archivos de aplicación y preparar base de datos
