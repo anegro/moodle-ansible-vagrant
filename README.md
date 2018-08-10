@@ -15,8 +15,8 @@ Conjunto de archivos de configuración de Ansible y Vagrant con el objetivo de p
 
 Este escenario ha sido desarrollado y probado utilizando las siguientes herramientas:
 
-- **Vagrant 1.8.6**
-- **Ansible 2.3.1.0**
+- **Vagrant 2.0.2**
+- **Ansible 2.5.1**
 
 
 ## Utilización básica
@@ -31,7 +31,7 @@ prefix: 'moodle'
 
 servers:
   - name: server1
-    box: ubuntu/xenial64
+    box: bento/ubuntu-18.04
     ram: 512
     ip: 172.31.0.11
     mask: 255.255.0.0
@@ -181,17 +181,17 @@ moodle_config_php_options:
 #    directory: 'coursesize'
 #    package: 'plugins/report_coursesize_moodle31_2016051600.zip'
 
-moodle_version: 3.3
-moodle_tarball: "moodle33/moodle-latest-33.tgz"
-moodle_langpack: "moodle33/es.zip"
+moodle_version: 3.5
+moodle_tarball: "moodle35/moodle-latest-35.tgz"
+moodle_langpack: "moodle35/es.zip"
 moodle_langdir: "es"
 moodle_install_plugins:
   - type: 'course/format'
     directory: 'onetopic'
-    package: 'plugins/format_onetopic_moodle32_2016071402.zip'
+    package: 'plugins/format_onetopic_moodle35_2018010604.zip'
   - type: 'report'
     directory: 'coursesize'
-    package: 'plugins/report_coursesize_moodle31_2016051600.zip'
+    package: 'plugins/report_coursesize_moodle35_2018052100.zip'
 ~~~
 
 También es posible incluir ajustes personalizados para la configuración de los roles `mysql`, `php` y `apache`. Consultar el correspondiente archivo `defaults/main.yml` de valores por defecto de cada rol.
