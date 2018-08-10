@@ -19,7 +19,7 @@
 
   pre_tasks:
     - name: Instalar unzip
-      apt: pkg=unzip state=installed
+      apt: pkg=unzip state=present
 
   
   tasks:
@@ -105,5 +105,5 @@
 
 
   handlers:
-    - include: handlers/main.yml
+    - import_tasks: handlers/main.yml
 

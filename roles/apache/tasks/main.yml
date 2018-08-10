@@ -1,7 +1,7 @@
 ---
 # Instalación de apache
 - name: Instalar apache
-  apt: pkg={{ item }} state=installed update_cache=yes
+  apt: pkg={{ item }} state=present update_cache=yes
   with_items: "{{ apache_packages }}"
   notify: start apache
 

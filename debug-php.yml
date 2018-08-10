@@ -38,5 +38,5 @@
 
 
   handlers:
-    - include: handlers/main.yml
+    - import_playbook: handlers/main.yml
 

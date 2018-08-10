@@ -1,14 +1,14 @@
 ---
 
 # Operaciones comunes sobre todos los nodos
-- include: common.yml
+- import_playbook: common.yml
 
 # Instalación de Apache/PHP/MySQL
-- include: lamp.yml
+- import_playbook: lamp.yml
 
 # Desplegar archivos de aplicación y preparar base de datos
-- include: moodle-install.yml
+- import_playbook: moodle-install.yml
 
 # Restaurar copia de seguridad
-#- include: moodle-restore.yml
+#- import_playbook: moodle-restore.yml
 

@@ -1,12 +1,12 @@
 ---
 # Instalación de PHP
 - name: Instalar PHP
-  apt: pkg={{ item }} state=installed update_cache=yes
+  apt: pkg={{ item }} state=present update_cache=yes
   with_items: "{{ php_packages }}"
   notify: restart apache
 
 - name: Instalar módulos de PHP
-  apt: pkg={{ item }} state=installed update_cache=yes
+  apt: pkg={{ item }} state=present update_cache=yes
   with_items: "{{ php_modules }}"
   notify: restart apache
 
