@@ -24,6 +24,11 @@
 
 
   tasks:
+    - name: Crear directorio /root/.ssh/
+      file: path=/root/.ssh/
+        state=directory recurse=yes
+        owner=root group=root mode=0700
+
     - name: Permitir a root acceder con la clave SSH de vagrant
       command: cp /home/vagrant/.ssh/authorized_keys /root/.ssh/authorized_keys
   
