@@ -80,15 +80,27 @@ moodle_config_php_options:
 #    directory: 'coursesize'
 #    package: 'plugins/report_coursesize_moodle31_2016051600.zip'
 
-moodle_version: 3.3
-moodle_tarball: "moodle33/moodle-latest-33.tgz"
-moodle_langpack: "moodle33/es.zip"
+#moodle_version: 3.3
+#moodle_tarball: "moodle33/moodle-latest-33.tgz"
+#moodle_langpack: "moodle33/es.zip"
+#moodle_langdir: "es"
+#moodle_install_plugins:
+#  - type: 'course/format'
+#    directory: 'onetopic'
+#    package: 'plugins/format_onetopic_moodle32_2016071402.zip'
+#  - type: 'report'
+#    directory: 'coursesize'
+#    package: 'plugins/report_coursesize_moodle31_2016051600.zip'
+
+moodle_version: 3.5
+moodle_tarball: "moodle35/moodle-latest-35.tgz"
+moodle_langpack: "moodle35/es.zip"
 moodle_langdir: "es"
 moodle_install_plugins:
   - type: 'course/format'
     directory: 'onetopic'
-    package: 'plugins/format_onetopic_moodle32_2016071402.zip'
+    package: 'plugins/format_onetopic_moodle35_2018010604.zip'
   - type: 'report'
     directory: 'coursesize'
-    package: 'plugins/report_coursesize_moodle31_2016051600.zip'
+    package: 'plugins/report_coursesize_moodle35_2018052100.zip'
 
