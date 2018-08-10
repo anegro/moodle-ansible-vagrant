@@ -270,9 +270,6 @@ ansible-playbook debug-php.yml --tags enable
 ansible-playbook debug-php.yml --tags disable
 ~~~
 
-moodle-restore.yml
-moodle-upgrade.yml
-
 ## Referencias
 
 - [HCPSS/ansible-role-moodle](https://github.com/HCPSS/ansible-role-moodle)
