@@ -108,6 +108,13 @@ server_name: "webserver"
 server_admin: "admin@example.com"
 document_root: "/var/www/"
 
+# El rol 'apache' recibe esta variable con una lista de sitios virtuales por
+# nombre a configurar
+apache_sites:
+  - server_name: "{{ server_name }}"
+    server_admin: "{{ server_admin }}"
+    document_root: "{{ document_root }}"
+
 
 # Base de datos
 db_name: "moodle_db"
@@ -269,6 +276,9 @@ ansible-playbook debug-php.yml --tags enable
 # Ocultar errores de PHP
 ansible-playbook debug-php.yml --tags disable
 ~~~
+
+moodle-restore.yml
+moodle-upgrade.yml
 
 ## Referencias
 
