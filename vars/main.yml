@@ -4,7 +4,7 @@
 
 # Apache
 server_name: "webserver"
-server_admin: "admin@iesluisvelez.org"
+server_admin: "admin@example.com"
 document_root: "/var/www/"
 
 # El rol 'apache' recibe esta variable con una lista de sitios virtuales por
@@ -16,9 +16,9 @@ apache_sites:
 
 
 # Base de datos
-db_name: "moodle35_db"
-db_user: "moodle35_usr"
-db_pass: "moodle35_pass"
+db_name: "moodle_db"
+db_user: "moodle_usr"
+db_pass: "moodle_pass"
 db_create_tables: yes
 
 
