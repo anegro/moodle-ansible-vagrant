@@ -1,0 +1,38 @@
+---
+# Instalar y configurar postfix
+- name: Instalar Postfix y utilidades
+  apt: pkg={{ item }} state=present
+  with_items:
+    - postfix
+    - mailutils
+    - mutt
+  notify: start postfix
+
+- name: Configurar /etc/mailname
+  template: src=etc/mailname.j2
+    dest=/etc/mailname
+    owner=root group=root mode=0644
+  notify: restart postfix
+
+- name: Configurar main.cf
+  template: src=etc/postfix/main.cf.j2
+    dest=/etc/postfix/main.cf
+    owner=root group=root mode=0644
+  notify: restart postfix
+
+- name: Configurar alias virtuales
+  template: src=etc/postfix/virtual.j2
+    dest=/etc/postfix/virtual
+    owner=root group=root mode=0644
+
+- name: Indexar alias virtuales
+  command: postmap /etc/postfix/virtual
+
+- name: Configurar sustituciones genéricas para el correo saliente
+  template: src=etc/postfix/generic.j2
+    dest=/etc/postfix/generic
+    owner=root group=root mode=0644
+
+- name: Indexar alias sustituciones genéricas
+  command: postmap /etc/postfix/generic
+

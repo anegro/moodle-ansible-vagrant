@@ -15,6 +15,16 @@ apache_sites:
     document_root: "{{ document_root }}"
 
 
+# Servicio de correo electrónico
+mail_domain: example.com
+mail_hostname: "{{ server_name }}"
+mail_networks: 172.31.0.0/16
+
+mail_use_sendgrid: false
+mail_sendgrid_user: "user"
+mail_sendgrid_pass: "pass"
+
+
 # Base de datos
 db_name: "moodle_db"
 db_user: "moodle_usr"

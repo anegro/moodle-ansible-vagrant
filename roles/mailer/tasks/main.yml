@@ -1,0 +1,4 @@
+# Instalar y configurar servidor de correo
+---
+- include_tasks: smtp.yml
+

@@ -6,6 +6,8 @@
 
 # Otros
 test.yml
-recursos/*
+custom.yml
+files/custom/
 vars/secrets.yml
+recursos/*
 

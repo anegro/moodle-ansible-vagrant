@@ -21,6 +21,7 @@
     - mysql
     - php
     - apache
+    - mailer
 
 
   tasks:

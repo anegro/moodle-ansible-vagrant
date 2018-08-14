@@ -1,0 +1,11 @@
+---
+# defaults file for mail-sender
+
+mail_domain: dom.example.com
+mail_hostname: "{{ ansible_hostname }}"
+mail_networks: 172.16.0.0/16 192.168.56.0/24
+
+mail_use_sendgrid: false
+mail_sendgrid_user: "username"
+mail_sendgrid_pass: "password"
+
