@@ -38,5 +38,5 @@
 
 
   handlers:
-    - import_playbook: handlers/main.yml
+    - import_tasks: handlers/main.yml
 
