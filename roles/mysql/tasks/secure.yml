@@ -13,7 +13,7 @@
   with_items: "{{ mysql_root_hosts }}"
  
 - name: Copiar el archivo my.cnf de usuario con las credenciales de root passwd
-  template: src=root/my.cnf.j2 dest=~/.my.cnf owner=vagrant group=vagrant mode=0600
+  template: src=root/my.cnf.j2 dest=~/.my.cnf mode=0600
 
 - name: Borrar usuario anónimo de MySQL
   mysql_user: name="" state=absent
