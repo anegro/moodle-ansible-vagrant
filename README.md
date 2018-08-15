@@ -157,6 +157,7 @@ moodle_wwwroot: "http://{{ moodle_hostname }}/moodle"
 moodle_admin: "admin"
 moodle_password: "entrar"
 moodle_email: "{{ server_admin }}"
+moodle_norepy: "noreply@example.com"
 
 moodle_sitefullname: "Plataforma Educativa"
 moodle_siteshortname: "Moodle"
@@ -170,34 +171,6 @@ moodle_config_php_options:
 
 
 # Instalación de los archivos de la aplicación
-#moodle_version: 2.7
-#moodle_tarball: "moodle27/moodle-2.7.tgz"
-#moodle_langpack: "moodle27/es.zip"
-#moodle_langdir: "es"
-#moodle_install_plugins:
-#  - type: 'course/format'
-#    directory: 'onetopic'
-#    package: 'plugins/format_onetopic_moodle27_2014092802.zip'
-#  - type: 'report'
-#    directory: 'coursesize'
-#    package: 'plugins/report_coursesize_moodle30_2011081300.zip'
-#moodle_install_patches:
-#  # https://tracker.moodle.org/browse/MDL-50633
-#  - source: 'moodle27/mysqli_native_moodle_database.php.patched'
-#    target: 'lib/dml/mysqli_native_moodle_database.php'
-
-#moodle_version: 3.0
-#moodle_tarball: "moodle30/moodle-3.0.10.tgz"
-#moodle_langpack: "moodle30/es.zip"
-#moodle_langdir: "es"
-#moodle_install_plugins:
-#  - type: 'course/format'
-#    directory: 'onetopic'
-#    package: 'plugins/format_onetopic_moodle30_2016020501.zip'
-#  - type: 'report'
-#    directory: 'coursesize'
-#    package: 'plugins/report_coursesize_moodle31_2016051600.zip'
-
 moodle_version: 3.5
 moodle_tarball: "moodle35/moodle-latest-35.tgz"
 moodle_langpack: "moodle35/es.zip"

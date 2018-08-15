@@ -56,6 +56,7 @@ moodle_wwwroot: "http://{{ moodle_hostname }}/moodle"
 moodle_admin: "admin"
 moodle_password: "entrar"
 moodle_email: "{{ server_admin }}"
+moodle_norepy: "noreply@example.com"
 
 moodle_sitefullname: "Plataforma Educativa"
 moodle_siteshortname: "Moodle"
