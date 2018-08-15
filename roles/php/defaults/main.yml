@@ -14,7 +14,8 @@ php_modules:
   - php-soap
   - php-mysql
 
-php_ini_file: "/etc/php/7.0/apache2/php.ini"
+# Si no se define esta varible, se intentará adivinar el archivo de configuración
+#php_ini_file: "/etc/php/7.2/apache2/php.ini"
 
 php_settings:
   - param: display_errors

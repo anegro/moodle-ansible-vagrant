@@ -10,10 +10,24 @@
   with_items: "{{ php_modules }}"
   notify: restart apache
 
-- name: Configurar parámetros de PHP
+- name: Adivinar el directorio de configuración de PHP
+  shell: find /etc/php/ -name "php.ini" | sort | grep apache | tail -n 1
+  register: php_ini_guessed
+  when: php_ini_file is not defined
+
+- name: Configurar parámetros de PHP (archivo adivinado)
+  ini_file: dest={{ php_ini_guessed.stdout }} section=PHP
+     option={{ item.param }}
+     value={{ item.value }}
+  with_items: "{{ php_settings }}"
+  notify: restart apache
+  when: php_ini_file is not defined
+
+- name: Configurar parámetros de PHP (archivo indicado en variable)
   ini_file: dest={{ php_ini_file }} section=PHP
      option={{ item.param }}
      value={{ item.value }}
   with_items: "{{ php_settings }}"
   notify: restart apache
+  when: php_ini_file is defined
 
